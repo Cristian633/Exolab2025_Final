@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa interactivo con popup y botón</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100%; width: 100%; }
+    .popup-btn {
+      display: inline-block;
+      padding: .6rem 1rem;
+      border-radius: 8px;
+      border: none;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .leaflet-interactive { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([14.6349, -90.5069], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  const area = L.circle([15.6398, -90.5132], {
+    radius: 250,
+    fillColor: '#3388ff',
+    fillOpacity: 0.2,
+    color: '#3388ff',
+    weight: 2
+  }).addTo(map);
+
+  const popupHtml = `
+    <div>
+      <h3 style="margin:0 0 .5rem 0;">Zona seleccionada</h3>
+      <p style="margin:.25rem 0 .75rem 0;">Area interactiva para mostrar control.</p>
+      <a href="destino.html" class="popup-btn" role="button">Ir a otra página</a>
+    </div>
+  `;
+  area.bindPopup(popupHtml, { closeButton: true, autoClose: false });
+
+  let overPopup = false;
+  let closeTimer = null;
+
+  // Abrir al pasar el mouse
+  area.on('mouseover', () => {
+    clearTimeout(closeTimer);
+    area.openPopup();
+  });
+
+  // Cuando el popup se abre, enganchamos sus listeners
+  area.on('popupopen', (e) => {
+    const container = e.popup.getElement();
+    if (!container) return;
+
+    // Si el mouse entra al popup, marcamos que está "encima del popup"
+    container.addEventListener('mouseenter', () => {
+      overPopup = true;
+      clearTimeout(closeTimer);
+    });
+
+    // Si sale del popup, intentamos cerrar con un pequeño delay
+    container.addEventListener('mouseleave', () => {
+      overPopup = false;
+      programarCierre();
+    });
+  });
+
+  // Al salir del área, intentamos cerrar, pero damos tiempo a que el mouse entre al popup
+  area.on('mouseout', () => {
+    programarCierre();
+  });
+
+  function programarCierre() {
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      if (!overPopup) area.closePopup();
+    }, 180); // 180–250 ms suele sentirse bien
+  }
+
+  // Cerrar al hacer clic fuera
+  map.on('click', () => {
+    clearTimeout(closeTimer);
+    area.closePopup();
+  });
+
+  // Compatibilidad móvil: tocar para abrir y tocar fuera para cerrar
+  area.on('touchstart', (e) => {
+    e.originalEvent.preventDefault();
+    clearTimeout(closeTimer);
+    area.openPopup();
+  });
+</script>
+
+</body>
+</html>
