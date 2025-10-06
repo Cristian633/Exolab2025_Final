@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Prediction - The Tzikin</title>
-    <!-- Fuente Poppins desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,7 +13,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Fondo gradiente */
         body {
             min-height: 100vh;
             background: linear-gradient(to bottom right, #000000, #0f2c91);
@@ -22,7 +20,6 @@
             padding: 30px;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -33,7 +30,6 @@
             margin-bottom: 10px;
         }
 
-        /* Contenedor principal */
         .main-container {
             display: flex;
             gap: 40px;
@@ -42,7 +38,6 @@
             margin: 0 auto;
         }
 
-        /* Sección izquierda - Galería ORIGINAL */
         .gallery-section {
             flex: 1;
             display: flex;
@@ -80,7 +75,6 @@
             opacity: 0.7;
         }
 
-        /* Sección derecha - Texto FIJO con scroll */
         .text-section {
             flex: 1;
             display: flex;
@@ -116,7 +110,6 @@
             text-align: justify;
         }
 
-        /* Botón Ask ExoLab */
         .ask-btn {
             padding: 1rem 2rem;
             font-size: 1.2rem;
@@ -134,7 +127,6 @@
             background-color: #8ce87e;
         }
 
-        /* Modal del Chatbot */
         .modal {
             display: none;
             position: fixed;
@@ -142,48 +134,308 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .modal-content {
-            background: linear-gradient(to bottom right, #1a1a1a, #2d2d2d);
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
+            width: 100%;
             max-width: 500px;
-            text-align: center;
-            border: 2px solid #a3f29b;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(163, 242, 155, 0.2);
         }
-
-        .modal h2 {
-            margin-bottom: 20px;
+        
+        .chat-header {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 60, 30, 0.8));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(163, 242, 155, 0.3);
+        }
+        
+        .chat-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
             color: #a3f29b;
         }
-
-        .modal p {
-            margin-bottom: 25px;
-            line-height: 1.6;
+        
+        .chat-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
-
-        .close-modal {
-            padding: 0.8rem 2rem;
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
             background-color: #a3f29b;
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(163, 242, 155, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            color: #a3f29b;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(163, 242, 155, 0.3);
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            line-height: 1.4;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background-color: rgba(30, 40, 30, 0.7);
+            color: #e0e0e0;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            border: 1px solid rgba(163, 242, 155, 0.1);
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, rgba(30, 60, 30, 0.8), rgba(50, 80, 50, 0.8));
+            color: white;
+            border-bottom-right-radius: 5px;
+            margin-left: auto;
+            border: 1px solid rgba(163, 242, 155, 0.2);
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(163, 242, 155, 0.2);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(163, 242, 155, 0.3);
+            border-radius: 30px;
+            outline: none;
             font-size: 1rem;
-            transition: background-color 0.2s;
+            transition: all 0.3s;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+        
+        .chat-input input:focus {
+            border-color: #a3f29b;
+            box-shadow: 0 0 0 2px rgba(163, 242, 155, 0.2);
+        }
+        
+        .chat-input input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .chat-input button {
+            background: linear-gradient(135deg, rgba(30, 60, 30, 0.8), rgba(50, 80, 50, 0.8));
+            color: white;
+            border: 1px solid rgba(163, 242, 155, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .chat-input button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(163, 242, 155, 0.4);
+            background: linear-gradient(135deg, rgba(50, 80, 50, 0.9), rgba(70, 100, 70, 0.9));
+        }
+        
+        .chat-input button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            padding: 10px 16px;
+            background-color: rgba(30, 40, 30, 0.7);
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            width: fit-content;
+            margin-bottom: 15px;
+            border: 1px solid rgba(163, 242, 155, 0.1);
+        }
+        
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #a3f29b;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1s infinite ease-in-out;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(163, 242, 155, 0.2);
+        }
+        
+        .suggestion {
+            background: linear-gradient(135deg, rgba(30, 60, 30, 0.8), rgba(50, 80, 50, 0.8));
+            color: white;
+            border: 1px solid rgba(163, 242, 155, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .suggestion:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(163, 242, 155, 0.3);
+            background: linear-gradient(135deg, rgba(50, 80, 50, 0.9), rgba(70, 100, 70, 0.9));
+        }
+        
+        .timestamp {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .emergency-info {
+            background-color: rgba(60, 30, 30, 0.5);
+            border-left: 4px solid rgba(200, 80, 80, 0.8);
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .info-title {
+            font-weight: bold;
+            color: rgba(255, 100, 100, 0.9);
+            margin-bottom: 5px;
+        }
+        
+        .definition {
+            background-color: rgba(30, 40, 60, 0.5);
+            border-left: 4px solid rgba(100, 150, 255, 0.8);
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .definition-title {
+            font-weight: bold;
+            color: rgba(150, 200, 255, 0.9);
+            margin-bottom: 5px;
+        }
+        
+        .error-message {
+            background-color: rgba(60, 30, 30, 0.5);
+            border-left: 4px solid rgba(255, 80, 80, 0.8);
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: rgba(255, 150, 150, 0.9);
+        }
+        
+        .close-modal-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(163, 242, 155, 0.3);
+            color: #a3f29b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .close-modal-btn:hover {
+            background: rgba(163, 242, 155, 0.2);
+            transform: scale(1.1);
         }
 
-        .close-modal:hover {
-            background-color: #8ce87e;
-        }
-
-        /* Botón para volver */
         .back-btn {
             position: fixed;
             bottom: 20px;
@@ -196,6 +448,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s;
+            z-index: 100;
         }
 
         .back-btn:hover {
@@ -203,7 +456,6 @@
             background-color: #8ce87e;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
@@ -229,19 +481,52 @@
             h1 {
                 font-size: 2rem;
             }
+            
+            .modal-content {
+                height: 90vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .suggestions {
+                gap: 8px;
+            }
+            
+            .suggestion {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a3f29b;
+            border-radius: 6px;
+            border: 2px solid rgba(0,0,0,0.2);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8ce87e;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <h1>Our Prediction</h1>
     </div>
 
-    <!-- Contenedor principal -->
     <div class="main-container">
-        <!-- Sección izquierda - Galería ORIGINAL -->
         <div class="gallery-section">
             <div class="gallery-container">
                 <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageA.jpg" 
@@ -259,7 +544,6 @@
             </div>
         </div>
 
-        <!-- Sección derecha - Texto FIJO con scroll -->
         <div class="text-section">
             <div class="text-box">
                 <p><strong>Our hypothesis:</strong> scientific data + sociocultural implications or other aspects related to the analyzed images.</p>
@@ -285,40 +569,64 @@
         </div>
     </div>
 
-    <!-- Modal del Chatbot -->
     <div class="modal" id="chatModal">
         <div class="modal-content">
-            <h2>ExoLab Assistant</h2>
-            <p>Welcome to the ExoLab chatbot! This feature is currently under development.</p>
-            <p>Soon you'll be able to ask questions about our predictions, SAR data analysis, and the geological findings in Sacatepéquez.</p>
-            <button class="close-modal" id="closeModal">Close</button>
+            <button class="close-modal-btn" id="closeModalBtn">×</button>
+            
+            <div class="chat-header">
+                <div class="bot-avatar">🌋</div>
+                <h1>TzikinSAR - Earthquake Assistant <span class="status-indicator" title="AI Connected"></span></h1>
+                <p>Powered by ExoLab - Specialized in earthquake information</p>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message bot-message">
+                    Hello! I'm your TzikinSAR earthquake assistant specialized in Guatemala. I can provide detailed information about earthquakes, safety measures, historical events, and more.
+                    <div class="emergency-info">
+                        <div class="info-title">⚠️ EMERGENCY PROTOCOL:</div>
+                        If you're experiencing an earthquake: DROP to the ground, take COVER under sturdy furniture, and HOLD ON until shaking stops. Stay away from windows and falling objects.
+                    </div>
+                    <div class="timestamp" id="initialTime"></div>
+                </div>
+            </div>
+            
+            <div class="suggestions">
+                <div class="suggestion" data-msg="What was the strongest earthquake in Guatemala's history?">Strongest Earthquake</div>
+                <div class="suggestion" data-msg="What should I include in an earthquake emergency kit?">Emergency Kit</div>
+                <div class="suggestion" data-msg="Explain the tectonic activity in Guatemala">Tectonic Activity</div>
+                <div class="suggestion" data-msg="What are the most dangerous fault lines in Guatemala?">Fault Lines</div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Ask about earthquakes in Guatemala...">
+                <button id="sendButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Botón para volver -->
     <button class="back-btn" id="backBtn">← Back</button>
 
     <script>
-        // Elementos del DOM
         const images = document.querySelectorAll('.gallery-image');
         const askBtn = document.getElementById('askBtn');
         const backBtn = document.getElementById('backBtn');
         const chatModal = document.getElementById('chatModal');
-        const closeModal = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
-        // Galería de imágenes interactiva ORIGINAL
         images.forEach(image => {
             image.addEventListener('click', function() {
-                // Remover clases activas/inactivas de todas las imágenes
                 images.forEach(img => {
                     img.classList.remove('active');
                     img.classList.remove('inactive');
                 });
                 
-                // Agregar clase activa a la imagen clickeada
                 this.classList.add('active');
                 
-                // Agregar clase inactiva a las otras imágenes
                 images.forEach(img => {
                     if (img !== this) {
                         img.classList.add('inactive');
@@ -327,25 +635,174 @@
             });
         });
 
-        // Modal del Chatbot
         askBtn.addEventListener('click', function() {
             chatModal.style.display = 'flex';
+            document.getElementById('userInput').focus();
         });
 
-        closeModal.addEventListener('click', function() {
+        closeModalBtn.addEventListener('click', function() {
             chatModal.style.display = 'none';
         });
 
-        // Cerrar modal al hacer click fuera del contenido
         chatModal.addEventListener('click', function(e) {
             if (e.target === chatModal) {
                 chatModal.style.display = 'none';
             }
         });
 
-        // Botón para volver
         backBtn.addEventListener('click', function() {
             window.location.href = "pagina4.html";
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const suggestions = document.querySelectorAll('.suggestion');
+            
+            const API_KEY = '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';
+            const API_URL = 'https://api.openai.com/v1/chat/completions';
+            
+            document.getElementById('initialTime').textContent = getCurrentTime();
+            
+            function getCurrentTime() {
+                const now = new Date();
+                return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+                
+                // Convert line breaks to HTML
+                const formattedMessage = message.replace(/\n/g, '<br>');
+                messageDiv.innerHTML = formattedMessage;
+                
+                const timestamp = document.createElement('div');
+                timestamp.className = 'timestamp';
+                timestamp.textContent = getCurrentTime();
+                
+                messageDiv.appendChild(timestamp);
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.id = 'typingIndicator';
+                
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('span');
+                    typingDiv.appendChild(dot);
+                }
+                
+                chatContainer.appendChild(typingDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            function hideTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            async function callOpenAI(message) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-3.5-turbo',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are an expert earthquake specialist focused specifically on Guatemala. Provide accurate, detailed information about:
+                                    - Historical earthquakes in Guatemala
+                                    - Safety measures and emergency protocols
+                                    - Tectonic plates and fault lines in the region
+                                    - Building codes and construction safety
+                                    - Early warning systems
+                                    - Emergency preparedness
+                                    - Geological context of Guatemalan earthquakes
+                                    - Recent seismic activity
+                                    
+                                    Always prioritize safety information. Format responses with clear sections and use bullet points when helpful. Keep responses informative but concise.`
+                                },
+                                {
+                                    role: 'user',
+                                    content: message
+                                }
+                            ],
+                            max_tokens: 800,
+                            temperature: 0.7
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.choices[0].message.content;
+                    
+                } catch (error) {
+                    console.error('OpenAI API error:', error);
+                    return `I'm experiencing technical difficulties. Please try again in a moment. If the problem persists, check your internet connection.`;
+                }
+            }
+            
+            async function processUserMessage(message) {
+                userInput.value = '';
+                userInput.disabled = true;
+                sendButton.disabled = true;
+                
+                addMessage(message, true);
+                
+                showTypingIndicator();
+                
+                const response = await callOpenAI(message);
+                
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addMessage(response);
+                    userInput.disabled = false;
+                    sendButton.disabled = false;
+                    userInput.focus();
+                }, 500);
+            }
+            
+            sendButton.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    processUserMessage(message);
+                }
+            });
+            
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const message = userInput.value.trim();
+                    if (message) {
+                        processUserMessage(message);
+                    }
+                }
+            });
+            
+            suggestions.forEach(suggestion => {
+                suggestion.addEventListener('click', function() {
+                    const message = this.getAttribute('data-msg');
+                    processUserMessage(message);
+                });
+            });
+            
+            setTimeout(() => {
+                addMessage("I'm connected to AI and ready to answer your questions about earthquakes in Guatemala. You can ask about historical events, safety procedures, tectonic activity, or anything else related to seismic activity in the region.");
+            }, 1000);
         });
     </script>
 
