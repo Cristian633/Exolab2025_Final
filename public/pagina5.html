@@ -38,9 +38,11 @@
             display: flex;
             gap: 40px;
             height: calc(100vh - 200px);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        /* Sección izquierda - Galería */
+        /* Sección izquierda - Galería ORIGINAL */
         .gallery-section {
             flex: 1;
             display: flex;
@@ -78,7 +80,7 @@
             opacity: 0.7;
         }
 
-        /* Sección derecha - Texto */
+        /* Sección derecha - Texto FIJO con scroll */
         .text-section {
             flex: 1;
             display: flex;
@@ -91,7 +93,7 @@
             padding: 25px;
             border-radius: 12px;
             overflow-y: auto;
-            line-height: 1.6;
+            line-height: 1.8;
             margin-bottom: 20px;
         }
 
@@ -110,7 +112,7 @@
         }
 
         .text-box p {
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
             text-align: justify;
         }
 
@@ -221,7 +223,7 @@
             }
             
             .text-box {
-                max-height: 300px;
+                max-height: 400px;
             }
             
             h1 {
@@ -239,7 +241,7 @@
 
     <!-- Contenedor principal -->
     <div class="main-container">
-        <!-- Sección izquierda - Galería -->
+        <!-- Sección izquierda - Galería ORIGINAL -->
         <div class="gallery-section">
             <div class="gallery-container">
                 <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageA.jpg" 
@@ -257,13 +259,26 @@
             </div>
         </div>
 
-        <!-- Sección derecha - Texto -->
+        <!-- Sección derecha - Texto FIJO con scroll -->
         <div class="text-section">
-            <div class="text-box" id="dynamicText">
-                <!-- El texto se actualizará aquí dinámicamente -->
-                <p><strong>test text A</strong></p>
-                <p>This is the analysis for SAR Image A. Scientific data shows specific patterns in vegetation density and ground movement detection.</p>
-                <p>The sociocultural implications include potential impacts on local agriculture and community resilience strategies.</p>
+            <div class="text-box">
+                <p><strong>Our hypothesis:</strong> scientific data + sociocultural implications or other aspects related to the analyzed images.</p>
+                
+                <p>For example: if vegetation detection frequency was included, include the conclusion/hypothesis about the impact on agriculture in the area in relation to the studied phenomenon.</p>
+                
+                <p>This analysis combines satellite data with field observations to provide comprehensive insights into the geological and environmental dynamics of the Sacatepéquez region.</p>
+                
+                <p>The integration of SAR technology allows us to detect subtle ground movements and vegetation changes that might not be visible to the naked eye, providing early warning systems for potential geological hazards.</p>
+
+                <p>Our predictive models indicate that the seismic activity observed in these images follows a pattern consistent with the known fault lines in the area. The deformation patterns suggest accumulated stress that could potentially lead to significant seismic events in the coming months.</p>
+
+                <p>The sociocultural implications of these findings are profound. Local communities in Sacatepéquez have developed resilience strategies over generations, but modern data analysis can enhance these traditional approaches with scientific precision.</p>
+
+                <p>Agricultural impacts are also significant. The ground deformation detected by SAR imagery affects soil stability and water drainage patterns, which in turn influence crop yields and food security for the region's inhabitants.</p>
+
+                <p>Urban planning and infrastructure development must take these geological realities into account. Building codes, evacuation routes, and emergency response protocols should be updated based on the latest seismic risk assessments derived from this data.</p>
+
+                <p>The continuous monitoring capability of SAR technology provides an unprecedented opportunity for long-term studies of geological processes in Central America, contributing to global understanding of tectonic activity in volcanic regions.</p>
             </div>
             
             <button class="ask-btn" id="askBtn">Ask ExoLab</button>
@@ -284,59 +299,35 @@
     <button class="back-btn" id="backBtn">← Back</button>
 
     <script>
-        // Textos para cada imagen
-        const textContents = {
-            1: `
-                <p><strong>test text A</strong></p>
-                <p>This is the analysis for SAR Image A. Scientific data shows specific patterns in vegetation density and ground movement detection.</p>
-                <p>The sociocultural implications include potential impacts on local agriculture and community resilience strategies in the Sacatepéquez region.</p>
-                <p>SAR technology reveals subtle changes that help predict geological activity and environmental shifts.</p>
-            `,
-            2: `
-                <p><strong>test text B</strong></p>
-                <p>This is the analysis for SAR Image B. The data indicates significant ground deformation patterns and volcanic activity monitoring.</p>
-                <p>These findings have direct implications for urban planning and disaster preparedness in nearby communities.</p>
-                <p>The integration of multiple data sources provides a comprehensive view of the region's geological dynamics.</p>
-            `,
-            3: `
-                <p><strong>test text C</strong></p>
-                <p>This is the analysis for SAR Image C. Our analysis reveals important information about soil moisture and hydrological patterns.</p>
-                <p>These insights help understand water resource management and agricultural sustainability in the area.</p>
-                <p>The combination of SAR data with field observations creates a powerful tool for environmental monitoring.</p>
-            `
-        };
-
-        // Galería de imágenes interactiva
+        // Elementos del DOM
         const images = document.querySelectorAll('.gallery-image');
-        const dynamicText = document.getElementById('dynamicText');
-        
+        const askBtn = document.getElementById('askBtn');
+        const backBtn = document.getElementById('backBtn');
+        const chatModal = document.getElementById('chatModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Galería de imágenes interactiva ORIGINAL
         images.forEach(image => {
             image.addEventListener('click', function() {
-                const imageId = this.getAttribute('data-id');
-                
+                // Remover clases activas/inactivas de todas las imágenes
                 images.forEach(img => {
                     img.classList.remove('active');
                     img.classList.remove('inactive');
                 });
                 
+                // Agregar clase activa a la imagen clickeada
                 this.classList.add('active');
                 
+                // Agregar clase inactiva a las otras imágenes
                 images.forEach(img => {
                     if (img !== this) {
                         img.classList.add('inactive');
                     }
                 });
-                
-                // Actualizar el texto según la imagen seleccionada
-                dynamicText.innerHTML = textContents[imageId];
             });
         });
 
         // Modal del Chatbot
-        const askBtn = document.getElementById('askBtn');
-        const chatModal = document.getElementById('chatModal');
-        const closeModal = document.getElementById('closeModal');
-
         askBtn.addEventListener('click', function() {
             chatModal.style.display = 'flex';
         });
@@ -353,7 +344,7 @@
         });
 
         // Botón para volver
-        document.getElementById('backBtn').addEventListener('click', function() {
+        backBtn.addEventListener('click', function() {
             window.location.href = "pagina4.html";
         });
     </script>
