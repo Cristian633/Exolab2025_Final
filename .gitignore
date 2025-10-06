@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+*.env
+*.egg-info/
+build/
+dist/
+
+# Node / Web (si luego agregas tooling)
+node_modules/
+.cache/
