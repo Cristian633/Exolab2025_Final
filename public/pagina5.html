@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Prediction - The Tzikin</title>
+    <!-- Fuente Poppins desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Fondo gradiente */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #000000, #0f2c91);
+            color: white;
+            padding: 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            display: flex;
+            gap: 40px;
+            height: calc(100vh - 200px);
+        }
+
+        /* Sección izquierda - Galería */
+        .gallery-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gallery-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .gallery-image {
+            width: 30%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .gallery-image.active {
+            width: 40%;
+            height: 250px;
+            border-color: #a3f29b;
+            box-shadow: 0 0 20px rgba(163, 242, 155, 0.5);
+        }
+
+        .gallery-image.inactive {
+            width: 25%;
+            height: 180px;
+            opacity: 0.7;
+        }
+
+        /* Sección derecha - Texto */
+        .text-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-box {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            border-radius: 12px;
+            overflow-y: auto;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .text-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .text-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .text-box::-webkit-scrollbar-thumb {
+            background: #a3f29b;
+            border-radius: 4px;
+        }
+
+        .text-box p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* Botón Ask ExoLab */
+        .ask-btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #a3f29b;
+            color: #000;
+            transition: transform 0.2s, background-color 0.2s;
+            width: 100%;
+        }
+
+        .ask-btn:hover {
+            transform: scale(1.05);
+            background-color: #8ce87e;
+        }
+
+        /* Modal del Chatbot */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(to bottom right, #1a1a1a, #2d2d2d);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            border: 2px solid #a3f29b;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #a3f29b;
+        }
+
+        .modal p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .close-modal {
+            padding: 0.8rem 2rem;
+            background-color: #a3f29b;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .close-modal:hover {
+            background-color: #8ce87e;
+        }
+
+        /* Botón para volver */
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background-color: #a3f29b;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            background-color: #8ce87e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                gap: 30px;
+            }
+            
+            .gallery-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .gallery-image {
+                width: 100% !important;
+                height: 150px !important;
+                margin-bottom: 10px;
+            }
+            
+            .text-box {
+                max-height: 300px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Our Prediction</h1>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Sección izquierda - Galería -->
+        <div class="gallery-section">
+            <div class="gallery-container">
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageA.jpg" 
+                     alt="SAR Image A" 
+                     class="gallery-image active"
+                     data-id="1">
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageB.jpg" 
+                     alt="SAR Image B" 
+                     class="gallery-image inactive"
+                     data-id="2">
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageC.jpeg" 
+                     alt="SAR Image C" 
+                     class="gallery-image inactive"
+                     data-id="3">
+            </div>
+        </div>
+
+        <!-- Sección derecha - Texto -->
+        <div class="text-section">
+            <div class="text-box" id="dynamicText">
+                <!-- El texto se actualizará aquí dinámicamente -->
+                <p><strong>test text A</strong></p>
+                <p>This is the analysis for SAR Image A. Scientific data shows specific patterns in vegetation density and ground movement detection.</p>
+                <p>The sociocultural implications include potential impacts on local agriculture and community resilience strategies.</p>
+            </div>
+            
+            <button class="ask-btn" id="askBtn">Ask ExoLab</button>
+        </div>
+    </div>
+
+    <!-- Modal del Chatbot -->
+    <div class="modal" id="chatModal">
+        <div class="modal-content">
+            <h2>ExoLab Assistant</h2>
+            <p>Welcome to the ExoLab chatbot! This feature is currently under development.</p>
+            <p>Soon you'll be able to ask questions about our predictions, SAR data analysis, and the geological findings in Sacatepéquez.</p>
+            <button class="close-modal" id="closeModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Botón para volver -->
+    <button class="back-btn" id="backBtn">← Back</button>
+
+    <script>
+        // Textos para cada imagen
+        const textContents = {
+            1: `
+                <p><strong>test text A</strong></p>
+                <p>This is the analysis for SAR Image A. Scientific data shows specific patterns in vegetation density and ground movement detection.</p>
+                <p>The sociocultural implications include potential impacts on local agriculture and community resilience strategies in the Sacatepéquez region.</p>
+                <p>SAR technology reveals subtle changes that help predict geological activity and environmental shifts.</p>
+            `,
+            2: `
+                <p><strong>test text B</strong></p>
+                <p>This is the analysis for SAR Image B. The data indicates significant ground deformation patterns and volcanic activity monitoring.</p>
+                <p>These findings have direct implications for urban planning and disaster preparedness in nearby communities.</p>
+                <p>The integration of multiple data sources provides a comprehensive view of the region's geological dynamics.</p>
+            `,
+            3: `
+                <p><strong>test text C</strong></p>
+                <p>This is the analysis for SAR Image C. Our analysis reveals important information about soil moisture and hydrological patterns.</p>
+                <p>These insights help understand water resource management and agricultural sustainability in the area.</p>
+                <p>The combination of SAR data with field observations creates a powerful tool for environmental monitoring.</p>
+            `
+        };
+
+        // Galería de imágenes interactiva
+        const images = document.querySelectorAll('.gallery-image');
+        const dynamicText = document.getElementById('dynamicText');
+        
+        images.forEach(image => {
+            image.addEventListener('click', function() {
+                const imageId = this.getAttribute('data-id');
+                
+                images.forEach(img => {
+                    img.classList.remove('active');
+                    img.classList.remove('inactive');
+                });
+                
+                this.classList.add('active');
+                
+                images.forEach(img => {
+                    if (img !== this) {
+                        img.classList.add('inactive');
+                    }
+                });
+                
+                // Actualizar el texto según la imagen seleccionada
+                dynamicText.innerHTML = textContents[imageId];
+            });
+        });
+
+        // Modal del Chatbot
+        const askBtn = document.getElementById('askBtn');
+        const chatModal = document.getElementById('chatModal');
+        const closeModal = document.getElementById('closeModal');
+
+        askBtn.addEventListener('click', function() {
+            chatModal.style.display = 'flex';
+        });
+
+        closeModal.addEventListener('click', function() {
+            chatModal.style.display = 'none';
+        });
+
+        // Cerrar modal al hacer click fuera del contenido
+        chatModal.addEventListener('click', function(e) {
+            if (e.target === chatModal) {
+                chatModal.style.display = 'none';
+            }
+        });
+
+        // Botón para volver
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.location.href = "pagina4.html";
+        });
+    </script>
+
+</body>
+</html>

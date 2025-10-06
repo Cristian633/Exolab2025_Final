@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 4 - The Tzikin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #000000, #0f2c91);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            opacity: 0.8;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #a3f29b;
+            color: #000;
+            transition: transform 0.2s, background-color 0.2s;
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #8ce87e;
+        }
+
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Página 4</h1>
+    <p>Contenido en desarrollo - Próximamente más información</p>
+    
+    <div class="buttons-container">
+        <button class="btn" id="backBtn">← Back to Page 3</button>
+        <button class="btn" id="nextBtn">Next to Page 5 →</button>
+    </div>
+
+    <script>
+        // Botón para volver a página 3
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.location.href = "pagina3.html";
+        });
+
+        // Botón para ir a página 5
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            window.location.href = "pagina5.html";
+        });
+    </script>
+</body>
+</html>

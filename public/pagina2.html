@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TzikinSAR - ExoLab</title>
+    <title>Explore Guatemala - The Tzikin</title>
+    <!-- Fuente Poppins desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -16,7 +19,7 @@
         body {
             min-height: 100vh;
             background: 
-                linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 100%),
+                linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(15,44,145,0.8)),
                 url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
             background-size: cover;
             background-position: center;
@@ -25,13 +28,22 @@
             overflow-x: hidden;
         }
 
-        /* Contenedor principal con scroll */
-        .scroll-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 100vh 20px 150px 20px;
-            position: relative;
-            z-index: 2;
+        /* Disclaimer centrado en la parte superior */
+        .disclaimer {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 0.8rem;
+            color: #cccccc;
+            max-width: 80%;
+            background-color: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Sección del título con desvanecimiento */
@@ -63,107 +75,77 @@
         }
 
         h1 {
-            font-size: 6rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-shadow: 3px 3px 15px rgba(0,0,0,0.7);
-            position: relative;
-            transition: transform 0.4s ease, opacity 0.4s ease;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        .content-text {
-            text-align: justify;
-            line-height: 1.8;
-            font-size: 1.1rem;
-            margin-bottom: 60px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Texto "Select Location" */
+        .subtitle {
+            font-size: 1.5rem;
+            color: #a3f29b;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        /* Contenedor del mapa */
+        .map-container {
+            max-width: 1000px;
+            margin: 100vh auto 100px auto;
+            padding: 20px;
             position: relative;
             z-index: 2;
-            margin-top: 50vh;
         }
 
-        .content-text p {
-            margin-bottom: 1.5rem;
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Botón Start */
-        .start-btn {
-            padding: 1.2rem 3rem;
-            font-size: 1.3rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        /* Estilos para el popup del mapa */
+        .popup-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
             background-color: #a3f29b;
             color: #000;
-            transition: transform 0.3s, background-color 0.3s;
-            display: block;
-            margin: 40px auto 0 auto;
-            position: relative;
-            z-index: 2;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .start-btn:hover {
-            transform: scale(1.05);
+        .popup-btn:hover {
             background-color: #8ce87e;
+            transform: scale(1.05);
         }
 
-        .about-btn {
+        /* Botón para volver */
+        .back-btn {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             left: 20px;
             padding: 0.8rem 1.5rem;
             font-size: 1rem;
+            background-color: #a3f29b;
+            color: #000;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            background-color: #a3f29b;
-            color: #000;
             transition: transform 0.2s, background-color 0.2s;
             z-index: 10;
         }
 
-        .about-btn:hover {
+        .back-btn:hover {
             transform: scale(1.05);
             background-color: #8ce87e;
-        }
-
-        .about-text {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            background-color: rgba(0,0,0,0.9);
-            color: #fff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            display: none;
-            max-width: 300px;
-            z-index: 10;
-            line-height: 1.6;
-            border: 1px solid #a3f29b;
-            backdrop-filter: blur(10px);
-        }
-
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #a3f29b;
-            border-radius: 6px;
-            border: 2px solid rgba(0,0,0,0.2);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8ce87e;
         }
 
         /* Indicador de scroll */
@@ -208,19 +190,23 @@
             }
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 4rem;
+                font-size: 2.5rem;
             }
             
-            .scroll-container {
-                padding: 100vh 15px 120px 15px;
+            .subtitle {
+                font-size: 1.2rem;
             }
             
-            .content-text {
-                font-size: 1rem;
-                padding: 25px;
-                margin-top: 40vh;
+            #map {
+                height: 400px;
+            }
+            
+            .map-container {
+                margin: 100vh auto 80px auto;
+                padding: 15px;
             }
             
             .scroll-indicator {
@@ -228,61 +214,71 @@
                 font-size: 0.8rem;
                 padding: 8px 16px;
             }
+            
+            .disclaimer {
+                max-width: 90%;
+                font-size: 0.7rem;
+                padding: 8px 15px;
+            }
         }
 
         @media (max-width: 480px) {
             h1 {
-                font-size: 3rem;
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            #map {
+                height: 300px;
             }
             
             .hero-section {
                 padding: 0 20px;
             }
             
-            .content-text {
-                margin-top: 30vh;
+            .disclaimer {
+                max-width: 95%;
+                font-size: 0.65rem;
+                padding: 6px 12px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Botón About ExoLab -->
-    <button class="about-btn" id="aboutBtn">About ExoLab</button>
-    <div class="about-text" id="aboutText">
-        Proyecto TzikinSAR del equipo ExoLab para el reto: "Through the Radar Looking Glass: Revealing Earth Processes with SAR".
+    <!-- Disclaimer centrado en la parte superior -->
+    <div class="disclaimer">
+        Disclaimer: We only worked on 1 location (Sacatepéquez), the other button is just for demonstration purposes.
     </div>
 
     <!-- Sección del título hero -->
     <div class="hero-section" id="heroSection">
-        <h1>TzikinSAR</h1>
+        <h1>Explore Guatemala's Hidden Secrets</h1>
+        <div class="subtitle">Select Location</div>
         <div class="scroll-indicator" id="scrollIndicator">Scroll to explore</div>
     </div>
 
-    <!-- Contenedor principal con scroll -->
-    <div class="scroll-container">
-        <!-- Texto contenido -->
-        <div class="content-text">
-            <p>The ancient Maya understood the cosmos through the symbol of Tz'ikin (or Tzikin), a powerful Nahual representing the bird—the majestic messenger that soars between the heavens and the Earth, carrying messages of fortune, freedom, and far-reaching vision. This reverence for the avian seer and connector inspired our ExoLab team's TzikinSAR project, developed for the NASA Space Apps Challenge 2025.</p>
-            
-            <p>Following the intense earthquake swarm that began on July 8th, with an epicenter in Sacatepéquez, Guatemala, we focused our attention on this highly seismic region, utilizing the penetrating eye of SAR (Synthetic Aperture Radar) satellite imagery.</p>
-            
-            <p>We see science not merely as data collection, but as a key to deeply understanding our own community; just as the legendary Tz'ikin could see secrets hidden from the ground, our analysis of different SAR frequencies will allow us to compare ground deformation and uncover the Earth's hidden stories in this complex region, turning raw data into an essential tool for resilience and knowledge for those who live beneath the volcanoes.</p>
-        </div>
-
-        <!-- Botón Start -->
-        <button class="start-btn" id="startBtn">Start</button>
+    <!-- Contenedor del mapa -->
+    <div class="map-container">
+        <div id="map"></div>
     </div>
 
+    <!-- Botón para volver -->
+    <button class="back-btn" id="backBtn">← Back</button>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Elementos del DOM
-        const aboutBtn = document.getElementById('aboutBtn');
-        const aboutText = document.getElementById('aboutText');
-        const startBtn = document.getElementById('startBtn');
         const heroSection = document.getElementById('heroSection');
         const scrollIndicator = document.getElementById('scrollIndicator');
-        const contentText = document.querySelector('.content-text');
+        const backBtn = document.getElementById('backBtn');
+        const mapContainer = document.querySelector('.map-container');
 
+        // Variables para control del scroll
         let lastScrollY = window.scrollY;
         let isScrollingDown = false;
         let scrollTimeout;
@@ -290,9 +286,11 @@
         const fadeStartPosition = 100;
         const fadeEndPosition = 300;
 
+        // Animación del scroll
         window.addEventListener('scroll', function() {
             const scrollPosition = window.scrollY;
             
+            // Determinar dirección del scroll
             isScrollingDown = scrollPosition > lastScrollY;
             lastScrollY = scrollPosition;
             
@@ -342,45 +340,95 @@
 
         scrollIndicator.addEventListener('click', function() {
             window.scrollTo({
-                top: contentText.offsetTop - 100,
+                top: mapContainer.offsetTop - 100,
                 behavior: 'smooth'
             });
         });
 
-        aboutBtn.addEventListener('click', function() {
-            if(aboutText.style.display === "block") {
-                aboutText.style.display = "none";
-            } else {
-                aboutText.style.display = "block";
-            }
+        backBtn.addEventListener('click', function() {
+            window.location.href = "index.html";
         });
 
-        startBtn.addEventListener('click', function() {
-            window.location.href = "pagina2.html";
-        });
+        const sacatepequezLat = 14.5566667;
+        const sacatepequezLng = -90.7338889;
 
-        document.addEventListener('click', function(event) {
-            if (!aboutBtn.contains(event.target) && !aboutText.contains(event.target)) {
-                aboutText.style.display = "none";
-            }
-        });
+        const map = L.map('map').setView([sacatepequezLat, sacatepequezLng], 13);
 
-        let touchStartY = 0;
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        const area = L.circle([sacatepequezLat, sacatepequezLng], {
+            radius: 5000,
+            fillColor: '#ff4444',
+            fillOpacity: 0.3,
+            color: '#ff0000',
+            weight: 3
+        }).addTo(map);
+
+        const popupHtml = `
+            <div style="text-align: center; padding: 10px;">
+                <h3 style="margin:0 0 .5rem 0; color: #000;">Sacatepéquez</h3>
+                <p style="margin:.25rem 0 .75rem 0; color: #333;">Coordinates: 14°33′24″N 90°44′02″O</p>
+                <p style="margin:.25rem 0 .75rem 0; color: #333;">Click to explore seismic data and analysis</p>
+                <a href="pagina3.html" class="popup-btn" role="button">Explore Area</a>
+            </div>
+        `;
         
-        document.addEventListener('touchstart', function(e) {
-            touchStartY = e.touches[0].clientY;
+        area.bindPopup(popupHtml, { 
+            closeButton: true, 
+            autoClose: false,
+            className: 'custom-popup'
         });
 
-        document.addEventListener('touchmove', function(e) {
-            const touchY = e.touches[0].clientY;
-            const diff = touchStartY - touchY;
-            
-            if (diff > 10 && window.scrollY === 0) {
-                window.scrollTo({
-                    top: 100,
-                    behavior: 'smooth'
-                });
-            }
+        let overPopup = false;
+        let closeTimer = null;
+
+        area.on('mouseover', () => {
+            clearTimeout(closeTimer);
+            area.openPopup();
+        });
+
+        area.on('popupopen', (e) => {
+            const container = e.popup.getElement();
+            if (!container) return;
+
+            container.addEventListener('mouseenter', () => {
+                overPopup = true;
+                clearTimeout(closeTimer);
+            });
+
+            container.addEventListener('mouseleave', () => {
+                overPopup = false;
+                programarCierre();
+            });
+        });
+
+        area.on('mouseout', () => {
+            programarCierre();
+        });
+
+        function programarCierre() {
+            clearTimeout(closeTimer);
+            closeTimer = setTimeout(() => {
+                if (!overPopup) area.closePopup();
+            }, 180);
+        }
+
+        map.on('click', () => {
+            clearTimeout(closeTimer);
+            area.closePopup();
+        });
+
+        area.on('touchstart', (e) => {
+            e.originalEvent.preventDefault();
+            clearTimeout(closeTimer);
+            area.openPopup();
+        });
+
+        area.on('click', () => {
+            window.location.href = "pagina3.html";
         });
     </script>
 
