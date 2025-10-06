@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 4 - The Tzikin</title>
+    <title>Data Analysis - The Tzikin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -17,85 +17,410 @@
             min-height: 100vh;
             background: linear-gradient(to bottom right, #000000, #0f2c91);
             color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
+            padding: 30px;
+        }
+
+        /* Header */
+        .header {
             text-align: center;
+            margin-bottom: 40px;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 4rem;
-            max-width: 600px;
-            opacity: 0.8;
-        }
-
-        .buttons-container {
+        .main-container {
             display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 40px;
+            height: calc(100vh - 200px);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .btn {
-            padding: 1.2rem 2.5rem;
-            font-size: 1.3rem;
+        .gallery-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gallery-rectangle {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .gallery-image.active {
+            display: block;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #a3f29b;
+            color: #000;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s, background-color 0.2s, opacity 0.2s;
+            z-index: 10;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #8ce87e;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .nav-btn:disabled:hover {
+            transform: translateY(-50%) scale(1);
+            background-color: #a3f29b;
+        }
+
+        .prev-image-btn {
+            left: 20px;
+        }
+
+        .next-image-btn {
+            right: 20px;
+        }
+
+        .image-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #666;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .image-indicator.active {
+            background-color: #a3f29b;
+            transform: scale(1.2);
+        }
+
+        .image-indicator:hover {
+            transform: scale(1.3);
+        }
+
+        .figure-text {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .text-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-box {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 25px;
+            border-radius: 12px;
+            overflow-y: auto;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .text-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .text-box::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .text-box::-webkit-scrollbar-thumb {
+            background: #a3f29b;
+            border-radius: 4px;
+        }
+
+        .text-box p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .next-page-btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             background-color: #a3f29b;
             color: #000;
             transition: transform 0.2s, background-color 0.2s;
-            min-width: 200px;
+            width: 100%;
         }
 
-        .btn:hover {
+        .next-page-btn:hover {
+            transform: scale(1.05);
+            background-color: #8ce87e;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background-color: #a3f29b;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .back-btn:hover {
             transform: scale(1.05);
             background-color: #8ce87e;
         }
 
         @media (max-width: 768px) {
-            .buttons-container {
+            .main-container {
                 flex-direction: column;
-                gap: 1rem;
+                height: auto;
+                gap: 30px;
+            }
+            
+            .gallery-rectangle {
+                min-height: 300px;
+            }
+            
+            .text-box {
+                max-height: 300px;
             }
             
             h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
-            body {
-                padding: 20px;
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .prev-image-btn {
+                left: 10px;
+            }
+            
+            .next-image-btn {
+                right: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <h1>Página 4</h1>
-    <p>Contenido en desarrollo - Próximamente más información</p>
-    
-    <div class="buttons-container">
-        <button class="btn" id="backBtn">← Back to Page 3</button>
-        <button class="btn" id="nextBtn">Next to Page 5 →</button>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Data Analysis</h1>
     </div>
 
+    <div class="main-container">
+        <div class="gallery-section">
+            <div class="gallery-rectangle">
+                <div class="figure-text" id="figureText">
+                    Fig.1 – 7 de junio, ubicación<br>Source: NASA
+                </div>
+                
+                <!-- Imágenes -->
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageA.jpg" 
+                     alt="SAR Image A" 
+                     class="gallery-image active"
+                     data-id="1">
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageB.jpg" 
+                     alt="SAR Image B" 
+                     class="gallery-image"
+                     data-id="2">
+                <img src="file:///C:/Users/CAMILADN/Downloads/coding/Tzikin/SARimageC.jpeg" 
+                     alt="SAR Image C" 
+                     class="gallery-image"
+                     data-id="3">
+                
+                <!-- Botón para imagen anterior -->
+                <button class="nav-btn prev-image-btn" id="prevImageBtn" disabled>&lt;</button>
+                
+                <!-- Botón para siguiente imagen -->
+                <button class="nav-btn next-image-btn" id="nextImageBtn">&gt;</button>
+            </div>
+            
+            <!-- Indicadores de imágenes -->
+            <div class="image-indicators">
+                <div class="image-indicator active" data-id="1"></div>
+                <div class="image-indicator" data-id="2"></div>
+                <div class="image-indicator" data-id="3"></div>
+            </div>
+        </div>
+
+        <!-- Sección derecha - Texto -->
+        <div class="text-section">
+            <div class="text-box" id="dynamicText">
+                <p><strong>Scientific Analysis - Image 1</strong></p>
+                <p>This SAR image from June 7th shows the initial seismic activity patterns in the Sacatepéquez region. The data reveals ground deformation and vegetation changes that are crucial for understanding the geological dynamics of the area.</p>
+                
+                <p>The analysis combines satellite observations with field data to provide comprehensive insights into the seismic behavior and potential risks associated with the fault lines in this region.</p>
+                
+                <p>Advanced processing techniques allow us to detect subtle changes that might not be visible through conventional monitoring methods, providing early warning capabilities for local communities.</p>
+            </div>
+            
+            <button class="next-page-btn" id="nextPageBtn">Next →</button>
+        </div>
+    </div>
+
+    <button class="back-btn" id="backBtn">← Back</button>
+
     <script>
-        // Botón para volver a página 3
-        document.getElementById('backBtn').addEventListener('click', function() {
+        // Textos para cada imagen
+        const textContents = {
+            1: `
+                <p><strong>Scientific Analysis - Image 1</strong></p>
+                <p>This SAR image from June 7th shows the initial seismic activity patterns in the Sacatepéquez region. The data reveals ground deformation and vegetation changes that are crucial for understanding the geological dynamics of the area.</p>
+                
+                <p>The analysis combines satellite observations with field data to provide comprehensive insights into the seismic behavior and potential risks associated with the fault lines in this region.</p>
+                
+                <p>Advanced processing techniques allow us to detect subtle changes that might not be visible through conventional monitoring methods, providing early warning capabilities for local communities.</p>
+            `,
+            2: `
+                <p><strong>Scientific Analysis - Image 2</strong></p>
+                <p>Image 2, captured on June 14th, demonstrates significant ground movement patterns. The SAR data indicates deformation rates that exceed normal geological activity levels, suggesting increased seismic risk.</p>
+                
+                <p>Comparative analysis with previous images shows progressive changes in the terrain, particularly in areas adjacent to known fault lines. These findings are essential for updating risk assessment models.</p>
+                
+                <p>The integration of multiple data sources provides a more accurate picture of the geological stresses building up in the region.</p>
+            `,
+            3: `
+                <p><strong>Scientific Analysis - Image 3</strong></p>
+                <p>The third image, from June 21st, reveals the culmination of seismic activity observed during this monitoring period. The data shows clear patterns of ground displacement and structural changes.</p>
+                
+                <p>This comprehensive dataset allows for detailed modeling of earthquake propagation and potential impact zones, supporting disaster preparedness efforts in vulnerable communities.</p>
+                
+                <p>The continuous monitoring capability of SAR technology provides invaluable data for long-term geological studies and risk mitigation strategies.</p>
+            `
+        };
+
+        // Textos de las figuras
+        const figureTexts = {
+            1: "Fig.1 – 7 de junio, ubicación<br>Source: NASA",
+            2: "Fig.2 – 14 de junio, deformación<br>Source: NASA",
+            3: "Fig.3 – 21 de junio, actividad<br>Source: NASA"
+        };
+
+        // Elementos del DOM
+        const images = document.querySelectorAll('.gallery-image');
+        const indicators = document.querySelectorAll('.image-indicator');
+        const prevImageBtn = document.getElementById('prevImageBtn');
+        const nextImageBtn = document.getElementById('nextImageBtn');
+        const dynamicText = document.getElementById('dynamicText');
+        const figureText = document.getElementById('figureText');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        let currentImageIndex = 0;
+
+        function updateNavButtons() {
+            prevImageBtn.disabled = currentImageIndex === 0;
+            
+            nextImageBtn.disabled = currentImageIndex === images.length - 1;
+        }
+
+        function showImage(index) {
+            images.forEach(img => img.classList.remove('active'));
+            images[index].classList.add('active');
+            
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            indicators[index].classList.add('active');
+            
+            dynamicText.innerHTML = textContents[index + 1];
+            
+            figureText.innerHTML = figureTexts[index + 1];
+            
+            currentImageIndex = index;
+            
+            updateNavButtons();
+        }
+
+        prevImageBtn.addEventListener('click', function() {
+            if (currentImageIndex > 0) {
+                const prevIndex = currentImageIndex - 1;
+                showImage(prevIndex);
+            }
+        });
+
+        nextImageBtn.addEventListener('click', function() {
+            if (currentImageIndex < images.length - 1) {
+                const nextIndex = currentImageIndex + 1;
+                showImage(nextIndex);
+            }
+        });
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', function() {
+                showImage(index);
+            });
+        });
+
+        nextPageBtn.addEventListener('click', function() {
+            window.location.href = "pagina5.html";
+        });
+
+        backBtn.addEventListener('click', function() {
             window.location.href = "pagina3.html";
         });
 
-        // Botón para ir a página 5
-        document.getElementById('nextBtn').addEventListener('click', function() {
-            window.location.href = "pagina5.html";
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' && currentImageIndex < images.length - 1) {
+                const nextIndex = currentImageIndex + 1;
+                showImage(nextIndex);
+            } else if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
+                const prevIndex = currentImageIndex - 1;
+                showImage(prevIndex);
+            }
         });
+
+        updateNavButtons();
     </script>
+
 </body>
 </html>
